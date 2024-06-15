@@ -1,0 +1,6 @@
+{
+    "port": "COM4",
+    "board": "arduino:avr:uno",
+    "programmer": "usbtinyisp",
+    "sketch": "sketch_jun14a.ino"
+}
