@@ -17,9 +17,10 @@ void setup()
 
 void loop()
 {
-    delay(2000);
+    delay(5000);
     float h = dht.readHumidity();
     float t = dht.readTemperature();
+    int soilMoistureValue = analogRead(A1);
 
     if (isnan(h) || isnan(t))
     {
@@ -46,5 +47,18 @@ void loop()
     }
     Serial.println(ldrValue);
     delay(500);
-    
+    //
+    Serial.print("Raw Moisture Value: ");
+    Serial.println(soilMoistureValue);
+    if (soilMoistureValue > 380){
+      Serial.print("i'm thirsty ");
+    }
+    else if (soilMoistureValue <380 && soilMoistureValue > 275)
+    {
+      Serial.print("i'm be OK ");
+    }
+    else
+    {
+      Serial.print("I'm drowning");
+    }
 }
