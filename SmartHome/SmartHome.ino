@@ -21,7 +21,8 @@ void loop()
     float h = dht.readHumidity();
     float t = dht.readTemperature();
     int soilMoistureValue = analogRead(A1);
-
+    int WaterLevelValue = analogRead(A2);
+    Serial.println("#######################");
     if (isnan(h) || isnan(t))
     {
         Serial.println("Error!!");
@@ -51,14 +52,37 @@ void loop()
     Serial.print("Raw Moisture Value: ");
     Serial.println(soilMoistureValue);
     if (soilMoistureValue > 380){
-      Serial.print("i'm thirsty ");
+      Serial.println("i'm thirsty ");
     }
-    else if (soilMoistureValue <380 && soilMoistureValue > 275)
+    else if (soilMoistureValue < 380 && soilMoistureValue > 275)
     {
-      Serial.print("i'm be OK ");
+      Serial.println("i'm be OK ");
     }
     else
     {
-      Serial.print("I'm drowning");
+      Serial.println("I'm drowning");
+    }
+    delay(101);
+    //
+    Serial.print("Water Level Value: ");
+    Serial.print(WaterLevelValue/3);
+    Serial.println("%");
+    if (WaterLevelValue > 300){
+      Serial.println("Tank is full!");
+    }
+    else if (WaterLevelValue > 100 && WaterLevelValue < 180)
+    {
+      Serial.println("Be careful");
+    }
+    else if (WaterLevelValue > 30 && WaterLevelValue < 100)
+    {
+      Serial.println("It's Bad");
+    }
+    else if (WaterLevelValue < 10)
+    {
+      Serial.println("Don't worry!! you have no water !! ");
+    }
+    else{
+      Serial.println("It's OK");
     }
 }
