@@ -1,7 +1,7 @@
-
+// #include<Arduino>
 #include "DHT.h"
 int ldrPin = A0;  
-int ldrValue = 0;
+int ldrValue = 0; 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -17,16 +17,19 @@ void setup()
 {
   Serial.begin(9600);
   dht.begin();
-  pinMode(13, OUTPUT);
+  pinMode(13, OUTPUT); // light
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
+  
   lcd.init(); // initialize the lcd
   lcd.backlight();
 
+  lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Temp: ");
   lcd.setCursor(0, 1);
   lcd.print("Humidity: ");
 }
-
 void loop()
 {
   delay(2000);
@@ -41,12 +44,24 @@ void loop()
     Serial.println("Error!!");
     return;
   }
+
   Serial.print("Humidity: ");
   Serial.print(h);
   Serial.print(" %\t");
   Serial.print("Temp: ");
   Serial.print(t);
   Serial.println(" *C ");
+
+  if (h < 55)
+  {
+    digitalWrite(11, HIGH);
+    Serial.print("sonic is work");
+  }
+  if (h > 70)
+  {
+    digitalWrite(11, LOW);
+    Serial.println("sonic is OFF");
+  }
 
   //
   ldrValue = analogRead(ldrPin);
@@ -75,19 +90,38 @@ void loop()
   {
     Serial.println("i'm thirsty ");
     flowerstatus = "i'm thirsty";
+    if (WaterLevelValue > 30)
+    {
+      digitalWrite(12, HIGH);
+    }
+    else
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Your Water Tank");
+        lcd.setCursor(1, 1);
+        lcd.print("Is Empty");
+        delay(1000);
+      }
+    }
   }
   else if (soilMoistureValue < 380 && soilMoistureValue > 275)
   {
     Serial.println("i'm be OK ");
     flowerstatus = "i'm be OK";
+    digitalWrite(12, LOW);
   }
   else
   {
     Serial.println("I'm drowning");
     flowerstatus = "I'm drowning";
+    digitalWrite(12, LOW);
   }
 
   //
+  lcd.clear();
   Serial.print("Water Level Value: ");
   Serial.print(WaterLevelValue / 3);
   Serial.println("%");
@@ -116,7 +150,7 @@ void loop()
     Serial.println("It's OK");
     WaterLevel = "  It's OK";
   }
-
+  lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Temp: ");
   lcd.setCursor(0, 1);
